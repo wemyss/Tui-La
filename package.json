@@ -1,0 +1,22 @@
+{
+  "name": "tui-la",
+  "version": "1.0.0",
+  "description": "Water level notification system",
+  "main": "main.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wemyss/Tui-La.git"
+  },
+  "author": "Sam Wemyss",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wemyss/Tui-La/issues"
+  },
+  "homepage": "https://github.com/wemyss/Tui-La#readme",
+  "engines": {
+    "node": "9.4.0"
+  }
+}
