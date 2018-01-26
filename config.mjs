@@ -1,5 +1,8 @@
-import secrets from './secrets.json';
+import secrets from './secrets.json'
 
-const config = Object.keys(secrets).map(key => process.env[key] || secrets[key]);
+const config = Object.keys(secrets).reduce((acc, key) => {
+	acc[key] = process.env[key] || secrets[key]
+	return acc
+}, {})
 
-export default config;
+export default config
