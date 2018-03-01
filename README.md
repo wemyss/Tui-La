@@ -11,3 +11,8 @@ Notification system to send messages/notifications when tank water levels reach 
 - DynamoDB
 - Heroku
 - Viber
+
+## Running the project
+
+1. Install dependencies
+2. Use `npm test` to test system
