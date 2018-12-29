@@ -1,31 +1,36 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Tank Levels</title>
-        <meta name="viewport" content="width=425, initial-scale=1">
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <style>
-            body {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-                width: 100vw;
-                height: 100vh;
-            }
-            iframe {
-                width: 425px;
-                height: 235px;
-                overflow: hidden;
-                margin: 20px;
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Bore water -->
-        <iframe src="https://thingspeak.com/channels/402164/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=100&title=Bore+Tank+Levels&type=line&xaxis=Time&yaxis=Water+level+%28mm%29&yaxismin=0" frameborder="0"></iframe>
-        <!-- Rain water -->
-        <iframe src="https://thingspeak.com/channels/402164/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=100&title=Rain+Water&type=line&xaxis=Time&yaxis=Water+level+%28mm%29&yaxismin=0" frameborder="0"></iframe>
-    </body>
+<head>
+	<meta charset="utf-8">
+	<title>Tank Levels</title>
+	<meta name="viewport" content="width=425">
+	<link rel="manifest" href="/manifest.json">
+	<link rel="apple-touch-icon" href="apple-touch-icon.png">
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+		}
+		body {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			width: 100vw;
+			height: 100vh;
+		}
+		iframe {
+			width: 425px;
+			height: 235px;
+			overflow: hidden;
+			margin: 20px;
+		}
+	</style>
+</head>
+<body>
+	<!-- Bore water -->
+	<iframe src="https://thingspeak.com/channels/402164/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=100&title=Bore+Tank+Levels&type=line&xaxis=Time&yaxis=Water+level+%28mm%29&yaxismin=0" frameborder="0"></iframe>
+	<!-- Rain water -->
+	<iframe src="https://thingspeak.com/channels/402164/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=100&title=Rain+Water&type=line&xaxis=Time&yaxis=Water+level+%28mm%29&yaxismin=0" frameborder="0"></iframe>
+</body>
 </html>
