@@ -3,8 +3,8 @@ import fetch from 'node-fetch'
 import config from './config'
 import { findMedian, findMax } from './helpers'
 
-const DATA_POINTS = 6
-const MIN_WATER_HEIGHT = 1000
+const DATA_POINTS = 6			// Number of points to calculate current average/max from
+const MIN_WATER_HEIGHT = 1000	// Minimum water level height, should this be variable.
 
 /**
 Fetch water data from thingspeak
@@ -23,7 +23,7 @@ function analyseTanks(data) {
 		const field = `field${x}`
 		return {
 			name: data.channel[field],
-			// FIXME: distributed water height. Should I use max or median? There is a lot of 0's atm so max will be better for now.
+			// NOTE: distributed water height. Should I use max or median? There is a lot of 0's atm so max will be better for now.
 			height: findMax(data, field),
 		}
 	})
@@ -34,7 +34,6 @@ function analyseTanks(data) {
 **/
 function notify(tank) {
 	console.log(tank)
-	// TODO: Send notification when water height changes more than 50cm since last notifcation? - DynamoDB
 	if (tank.height < MIN_WATER_HEIGHT) {
 		// send viber message
 	} else {
