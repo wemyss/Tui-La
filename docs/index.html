@@ -25,6 +25,11 @@
 			margin: 20px;
 		}
 	</style>
+	<script>
+		if('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/sw.js');
+		}
+	</script>
 </head>
 <body>
 	<!-- Bore water -->
