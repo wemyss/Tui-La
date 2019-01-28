@@ -4,7 +4,7 @@
   "description": "Water level notification system",
   "main": "main.mjs",
   "scripts": {
-    "test": "node --experimental-modules main.mjs"
+    "test": "node index.js"
   },
   "repository": {
     "type": "git",

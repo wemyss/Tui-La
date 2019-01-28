@@ -1,13 +1,34 @@
-import fetch from 'node-fetch'
+const fetch = require('node-fetch')
 
-import Webhook from './Webhook'
-import config from './config'
-import { extractFieldValues } from './helpers'
+const config = require('./config')
 
 // Data points are created on thinkspeak ~12min
 const DATA_POINTS = 4	// Number of data points to fetch
 const MIN_BORE_WATER_HEIGHT = 800	// mm
 const MAX_DROP_RATE_RAIN_WATER = 20 // mm
+
+/** Slack incoming webhook, basic messenger */
+class Webhook {
+  constructor(webhookURL) {
+    this.url = webhookURL
+  }
+
+  send(text) {
+    return fetch(this.url, {
+        method: 'POST',
+        body: JSON.stringify({ text }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+  }
+}
+
+/** Extracts the list of values > 0 for the given field name */
+function extractFieldValues(data, field) {
+	return data.feeds
+		.map(x => x[field])
+		.map(x => parseInt(x, 10))
+		.filter(x => x > 0)
+}
 
 /**
  * Fetch water data from thingspeak
@@ -55,14 +76,21 @@ function maybeNotify({ name, heights }) {
 			break
 		default:
 			const err = `Unhandled tank name: '${name}'`
-			hooks.send(err)
+			hook.send(err)
 			throw new Error(err)
 	}
 }
 
+function main() {
+	fetchWaterData()
+		.then(data => analyseTanks(data))
+		.then(tanks => tanks.map(t => maybeNotify(t)))
+}
 
-// Main
-// ------------------------------------------
-fetchWaterData()
-	.then(data => analyseTanks(data))
-	.then(tanks => tanks.map(t => maybeNotify(t)))
+if (config.MY_ENV === 'development') {
+	main()
+}
+
+module.exports.handler = (event) => {
+	main()
+}
