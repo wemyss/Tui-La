@@ -3,9 +3,10 @@ const fetch = require('node-fetch')
 const config = require('./config')
 
 // Data points are created on thinkspeak ~12min
-const DATA_POINTS = 4	// Number of data points to fetch
-const MIN_BORE_WATER_HEIGHT = 800	// mm
-const MAX_DROP_RATE_RAIN_WATER = 20 // mm
+const DATA_POINTS = 5	// Number of data points to fetch
+const MIN_BORE_WATER_HEIGHT = 1300  // mm
+const MAX_DROP_RATE_RAIN_WATER = 25 // mm
+const MAX_TIME_SINCE_LAST_DATA = 3  // hrs
 
 /** Slack incoming webhook, basic messenger */
 class Webhook {
@@ -22,12 +23,11 @@ class Webhook {
   }
 }
 
-/** Extracts the list of values > 0 for the given field name */
+/** Extracts the list of values for the given field name */
 function extractFieldValues(data, field) {
 	return data.feeds
 		.map(x => x[field])
 		.map(x => parseInt(x, 10))
-		.filter(x => x > 0)
 }
 
 /**
@@ -49,17 +49,33 @@ function analyseTanks(data) {
 		return {
 			name: data.channel[field],
 			heights: extractFieldValues(data, field),
+			latestDate: new Date(data.feeds[data.feeds.length - 1].created_at),
 		}
 	})
 }
 
+function nHoursAgo(n) {
+	const d = new Date()
+	d.setHours(d.getHours()-n)
+	return d
+}
+
 /** Notify via viber that the tank levels have dropped */
-function maybeNotify({ name, heights }) {
+function maybeNotify({ name, heights, latestDate }) {
+	console.log(name, heights, latestDate)
 	const hook = new Webhook(config.SLACK_WEBHOOK_URL)
-	if (!heights.length) {
-		hook.send(`The past ${DATA_POINTS} data points for ${name} have been 0mm...`)
+	if (latestDate < nHoursAgo(MAX_TIME_SINCE_LAST_DATA)) {
+		return hook.send(`Last data point received was over ${MAX_TIME_SINCE_LAST_DATA}hrs ago for ${name}`)
 	}
-	console.log(name, heights)
+
+	const points = heights.filter(x => x > 0)
+	if (points.length === 0) {
+		// All points were 0, we've already sent a notification
+		return;
+	}
+	if (points.length === 1 && heights[0] !== 0) {
+		return hook.send(`The past ${DATA_POINTS - 1} data points for ${name} have been 0mm...`)
+	}
 
 	switch (name) {
 		case 'Bore tank (A)':
