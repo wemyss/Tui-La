@@ -54,9 +54,10 @@ function analyseTanks(data) {
 	})
 }
 
+/** Return a new date `n` hours ago from now. Accepts decimals */
 function nHoursAgo(n) {
 	const d = new Date()
-	d.setHours(d.getHours()-n)
+	d.setMinutes(d.getMinutes() - (n * 60))
 	return d
 }
 
@@ -64,11 +65,14 @@ function nHoursAgo(n) {
 function maybeNotify({ name, heights, latestDate }) {
 	console.log(name, heights, latestDate)
 	const hook = new Webhook(config.SLACK_WEBHOOK_URL)
-	if (latestDate < nHoursAgo(MAX_TIME_SINCE_LAST_DATA)) {
-		return hook.send(`Last data point received was over ${MAX_TIME_SINCE_LAST_DATA}hrs ago for ${name}`)
+	if (latestDate < nHoursAgo(MAX_TIME_SINCE_LAST_DATA) &&
+			latestDate > nHoursAgo(MAX_TIME_SINCE_LAST_DATA + .5)) {
+		return hook.send(`Most recent data point was around ${MAX_TIME_SINCE_LAST_DATA}hrs ago for ${name}`)
 	}
 
+	// Non zero data points
 	const points = heights.filter(x => x > 0)
+
 	if (points.length === 0) {
 		// All points were 0, we've already sent a notification
 		return;
@@ -79,13 +83,13 @@ function maybeNotify({ name, heights, latestDate }) {
 
 	switch (name) {
 		case 'Bore tank (A)':
-			const height = heights[heights.length - 1]
+			const height = points[points.length - 1]
 			if (height < MIN_BORE_WATER_HEIGHT) {
 				hook.send(`Bore tank level is ${height}mm`)
 			}
 			break
 		case 'Rain Water (B)':
-			const delta = heights[0] - heights[heights.length - 1]
+			const delta = points[0] - points[points.length - 1]
 			if (delta > MAX_DROP_RATE_RAIN_WATER) {
 				hook.send(`Rain tank has dropped ${delta}mm over the past ${DATA_POINTS} data points`)
 			}
