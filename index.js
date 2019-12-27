@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 
 const config = require('./config')
 
-// Data points are created on thinkspeak ~12min
+// Data points are created on thingspeak ~12min
 const DATA_POINTS = 5	// Number of data points to fetch
 const MIN_BORE_WATER_HEIGHT = 1300  // mm
 const MAX_DROP_RATE_RAIN_WATER = 25 // mm
@@ -84,6 +84,10 @@ function maybeNotify({ name, heights, latestDate }) {
 	switch (name) {
 		case 'Bore tank (A)':
 			const height = points[points.length - 1]
+			if (points.slice(Math.max(points.length - 3, 1)).every(h => h < MIN_BORE_WATER_HEIGHT)) {
+				// 3 most recent points are less than the min bore water height, stop sending spam notifications
+				return;
+			}
 			if (height < MIN_BORE_WATER_HEIGHT) {
 				hook.send(`Bore tank level is ${height}mm`)
 			}
