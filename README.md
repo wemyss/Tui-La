@@ -8,11 +8,6 @@
 Notification system to send messages/notifications when tank water levels reach certain levels. Main goals of this project is that it is free for hobbyists and reliable.
 
 ## Tech Stack
-- DynamoDB
-- Heroku
-- Viber
-
-## Running the project
-
-1. Install dependencies
-2. Use `npm test` to test system
+- Lambda
+- Slack
+- Thingspeak
