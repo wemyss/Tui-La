@@ -20,6 +20,6 @@
     "node": "12.1.0"
   },
   "dependencies": {
-    "node-fetch": "^1.7.3"
+    "node-fetch": "^2.6.1"
   }
 }
